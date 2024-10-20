@@ -3,19 +3,35 @@ import path from 'path';
 import { writeFile, mkdir } from 'fs/promises';
 import short from 'short-uuid';
 
+
 export const GET = async (req: NextRequest) => {
     try {
         const recentTime = Date.now();
-        return NextResponse.json(
-            {
+
+        const headers = new Headers({
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Content-Type': 'application/json',
+        });
+
+        return new NextResponse(
+            JSON.stringify({
                 message: recentTime,
-            },
-            { status: 200 },
+            }),
+            {
+                status: 200,
+                headers: headers,
+            }
         );
     } catch (error) {
-        console.log(error);
+        console.error('Error in API:', error);
+        return new NextResponse(
+            JSON.stringify({ error: 'Internal Server Error' }),
+            { status: 500 }
+        );
     }
 };
+
 
 export const POST = async (req: NextRequest) => {
     try {
